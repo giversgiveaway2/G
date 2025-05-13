@@ -1,0 +1,211 @@
+:root {
+  --font-text: "FuturaPT-Book", sans-serif;
+  --font-text-bold: "FuturaPT-Bold", sans-serif;
+  --font-header: "FuturaPT-Book", serif;
+  --font-header-bold: "FuturaPT-Bold", serif;
+
+  --font-size-mini: 12px;
+  --font-size-text: 16px;
+  --font-size-h3: 18px;
+  --font-size-h2: 24px;
+  --font-size-h1: 48px;
+
+  --color-background: #fff;
+  --color-text: #000;
+  --color-text-light: #615d5c;
+  --color-secondary: #888;
+  --color-secondary-hover: #c9c4ba;
+  --color-hover: #85bb65;
+  --color-black: black;
+  --color-white: white;
+
+  --gap00: 6px;
+  --gap01: 12px;
+  --gap02: 16px;
+  --gap03: 24px;
+  --gap04: 32px;
+  --gap05: 48px;
+
+  --radius: 25px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0a0a0a;
+    --color-text: #ededed;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+}
+
+@font-face {
+  font-family: "FuturaPT-Book";
+  src: url("/fonts/FuturaPT-Book.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FuturaPT-Bold";
+  src: url("/fonts/FuturaPT-Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: norma l;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TiemposHeadline-Regular";
+  src: url("/fonts/TiemposHeadline-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TiemposHeadline-Black";
+  src: url("/fonts/TiemposHeadline-Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.primary-color {
+  background-color: var(--color-background);
+}
+
+.secondary-color {
+  background-color: var(--color-secondary);
+}
+
+.info-color {
+  background-color: var(--color-text);
+  color: var(--color-white);
+}
+
+.page {
+  width: 100vw;
+  max-width: 800px;
+  margin-top: var(--gap03);
+  margin-bottom: var(--gap03);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap03);
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-text);
+  font-size: var(--font-size-text);
+}
+
+h1 {
+  font-family: var(--font-header-bold);
+  font-size: var(--font-size-h1);
+}
+
+h2 {
+  font-family: var(--font-header);
+  font-size: var(--font-size-h2);
+}
+
+h3 {
+  font-family: var(--font-text-bold);
+  font-size: var(--font-size-h3);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  padding-left: 20px;
+}
+
+li {
+  position: relative;
+  padding-left: 20px;
+}
+
+li::before {
+  content: "-";
+  position: absolute;
+  left: 0;
+}
+
+.strong,
+strong {
+  font-family: var(--font-text-bold);
+  font-weight: bold;
+}
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+
+  line-height: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-align: left;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  user-select: none;
+}
+
+button,
+a {
+  transition: 0.2s ease all;
+  color: var(--color-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button:focus,
+button:hover,
+a:focus,
+a:hover {
+  * {
+    color: var(--color-hover) !important;
+  }
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  transition: 0.2s ease all;
+  scroll-behavior: smooth;
+}
+
+*:focus {
+  box-shadow: none;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}

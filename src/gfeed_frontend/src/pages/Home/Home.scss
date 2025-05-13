@@ -1,0 +1,13 @@
+.home__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap01);
+    margin-left: var(--gap03);
+    margin-right: var(--gap03);
+}
+
+.home__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap01);
+}

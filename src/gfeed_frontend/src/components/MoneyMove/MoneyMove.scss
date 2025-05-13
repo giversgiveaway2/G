@@ -1,0 +1,39 @@
+.money-move {
+    background-color: var(--color-background);
+    border-radius: var(--radius);
+    border: 1px solid var(--color-text);
+    box-shadow: 1px 1px 0 var(--color-text) !important;
+    padding: var(--gap02);
+    padding-bottom: var(--gap00);
+}
+
+.money-move__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap00);
+    width: 100%;
+}
+
+.money-move__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.money-move__source {
+    font-size: var(--font-size-mini);
+    color: var(--color-secondary);
+    width: 100%;
+}
+
+.money-move__rating {
+    display: flex;
+    gap: var(--gap00);
+
+    button {
+        padding: var(--gap00);
+        :first-child {
+            color: var(--color-secondary);
+        }
+    }
+}

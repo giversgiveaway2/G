@@ -1,0 +1,13 @@
+.feed-item__title {
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feed-item__source {
+  color: var(--color-secondary);
+  font-size: var(--font-size-mini);
+}
