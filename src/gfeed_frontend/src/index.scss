@@ -52,7 +52,7 @@
   font-family: "FuturaPT-Bold";
   src: url("/fonts/FuturaPT-Bold.otf") format("opentype");
   font-weight: bold;
-  font-style: norma l;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -208,4 +208,102 @@ a:hover {
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* App layout and header styles */
+.app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: var(--gap02);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.auth-section {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--gap01);
+}
+
+.principal-info {
+  font-size: var(--font-size-mini);
+  color: var(--color-text-light);
+  margin-right: var(--gap01);
+}
+
+/* Login page styles */
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  width: 100%;
+  position: relative;
+}
+
+.login-page h2 {
+  margin-bottom: var(--gap03);
+}
+
+/* Auth button styles */
+.auth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap00);
+  padding: var(--gap01) var(--gap02);
+  border-radius: var(--radius);
+  background-color: var(--color-text);
+  color: var(--color-background);
+  font-family: var(--font-text-bold);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-button:hover {
+  background-color: var(--color-background);
+}
+
+.auth-button .button-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  margin-right: var(--gap00);
+}
+
+.auth-button span {
+  color: var(--color-background);
+  white-space: nowrap;
+}
+
+/* Position the login button in the top right for the login page */
+.login-button-container {
+  position: fixed;
+  top: var(--gap02);
+  right: var(--gap02);
+  z-index: 100;
+}
+
+/* Main content area */
+main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
