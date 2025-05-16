@@ -1,29 +1,18 @@
 import Blob "mo:base/Blob";
 import Text "mo:base/Text";
 import Bool "mo:base/Bool";
-import Iter "mo:base/Iter";
 import IC "mo:ic";
 import XML "mo:xml";
+import JSON "mo:json";
 import Debug "mo:base/Debug";
-import Array "mo:base/Array";
-import Nat "mo:base/Nat";
+import Iter "mo:base/Iter";
+import Types "Types";
+import Utils "Utils";
+import OpenAI "OpenAI";
 
 actor {
-  public type FeedItem = {
-    title : Text;
-    source : Text;
-    datetime : Text;
-    description : Text;
-    link : Text;
-  };
 
-  public type FetchFeedResponse = {
-    isOK : Bool;
-    message : Text;
-    feedItems : [FeedItem];
-  };
-
-  private let _requestHeaders : [IC.HttpHeader] = [
+  private var _requestHeaders : [IC.HttpHeader] = [
     { name = "Accept"; value = "*/*" },
     { name = "Accept-Language"; value = "en-US,en;q=0.9" },
     { name = "DNT"; value = "1" },
@@ -48,66 +37,7 @@ actor {
     children = #selfClosing;
   };
 
-  private func xml_to_feed_item(element : XML.Element) : FeedItem {
-    let children = get_xml_children(element);
-
-    var title = "";
-    var source = "";
-    var description = "";
-    var link = "";
-    var datetime = "";
-
-    for (child in children.vals()) {
-      switch (child) {
-        case (#element(el)) {
-          if (el.name == "title") { title := get_text_from_element(el) };
-          if (el.name == "link") { link := get_text_from_element(el) };
-          if (el.name == "source") { source := get_text_from_element(el) };
-          if (el.name == "description") {
-            description := get_text_from_element(el);
-          };
-          if (el.name == "pubDate") { datetime := get_text_from_element(el) };
-        };
-        case _ {};
-      };
-    };
-
-    let feedItem : FeedItem = {
-      title = title;
-      source = source;
-      datetime = datetime;
-      description = description;
-      link = link;
-    };
-
-    return feedItem;
-  };
-
-  public func get_recent_feed_items(count : Nat) : async [FeedItem] {
-    var recentItems : [FeedItem] = [];
-    let children = get_xml_children(_channelElement);
-    Debug.print("get_recent_feed_items count " # Nat.toText(count) # " feed items count " # Nat.toText(children.size()));
-
-    for (child in children.vals()) {
-      if (recentItems.size() >= count) {
-        return recentItems;
-      };
-
-      switch (child) {
-        case (#element(el)) {
-          if (el.name == "item") {
-            recentItems := Array.append(recentItems, [xml_to_feed_item(el)]);
-          };
-        };
-        case (_) {};
-      };
-    };
-
-    recentItems;
-  };
-
-  public func open_file() : async [Nat8] {
-    let url : Text = "https : //www.spglobal.com/spdji/en/documents/index-news-and-announcements/20250429-iboxx-asia-list-private-placement-bonds.pdf";
+  private func navigate_to_url(url : Text) : async Blob {
     let httpRequest : IC.HttpRequestArgs = {
       url = url;
       max_response_bytes = null;
@@ -120,39 +50,11 @@ actor {
       };
     };
 
-    let http_response : IC.HttpRequestResult = await (with cycles = 230_949_972_000) IC.ic.http_request(httpRequest);
-    Blob.toArray(http_response.body);
+    let httpResponse : IC.HttpRequestResult = await (with cycles = 230_949_972_000) IC.ic.http_request(httpRequest);
+    return httpResponse.body;
   };
 
-  private func xml_to_text(element : XML.Element) : Text {
-    let iterChars = XML.toText(element);
-    Text.fromIter(iterChars);
-  };
-
-  private func get_text_from_element(el : XML.Element) : Text {
-    switch (el.children) {
-      case (#selfClosing) { "" };
-      case (#open(children)) {
-        var texts : [Text] = [];
-        for (child in children.vals()) {
-          switch (child) {
-            case (#text(t)) { texts := Array.append(texts, [t]) };
-            case _ {};
-          };
-        };
-        Text.join("", Iter.fromArray(texts));
-      };
-    };
-  };
-
-  private func get_xml_children(element : XML.Element) : [XML.ElementChild] {
-    switch (element.children) {
-      case (#open(children)) { children };
-      case (#selfClosing) { [] };
-    };
-  };
-
-  public func fetch_feed() : async FetchFeedResponse {
+  public func fetch_feed() : async Types.FetchFeedResponse {
     let url : Text = "https://www.spglobal.com/spdji/en/rss/rss-details/?rssFeedName=index-news-announcements";
     let httpRequest : IC.HttpRequestArgs = {
       url = url;
@@ -167,52 +69,129 @@ actor {
     };
 
     //IC management canister will make the HTTP request so it needs cycles
-    let http_response : IC.HttpRequestResult = await (with cycles = 230_949_972_000) IC.ic.http_request(httpRequest);
+    let httpResponse : IC.HttpRequestResult = await (with cycles = 230_949_972_000) IC.ic.http_request(httpRequest);
 
-    let decodedText : Text = switch (Text.decodeUtf8(http_response.body)) {
+    let decodedText : Text = switch (Text.decodeUtf8(httpResponse.body)) {
       case (null) { "" };
       case (?y) { y };
     };
 
-    var response : FetchFeedResponse = {
+    let defaultResponse : Types.FetchFeedResponse = {
       isOK = false;
       message = "Unable to connect to the feed";
       feedItems = [];
     };
 
-    if (decodedText == "") { return response };
+    if (decodedText == "") { return defaultResponse };
 
     switch (XML.fromText(decodedText.chars())) {
       case (#ok(root)) {
-        let channels = get_xml_children(root);
+        let channels = Utils.getXmlChildren(root);
 
         switch (channels[0]) {
           case (#element(value)) {
             _channelElement := value;
-            let feedItems = await get_recent_feed_items(10);
-
-            response := {
-              isOK = false;
-              message = "Successfully retrieved feed items";
+            let feedItems = Utils.getRecentFeedItems(_channelElement, 10);
+            let response : Types.FetchFeedResponse = {
+              isOK = true;
+              message = "Success";
               feedItems = feedItems;
             };
 
             return response;
           };
-          case (_) { return response };
+          case (_) { return defaultResponse };
         };
 
       };
       case (#err(error)) {
-        response := {
+        let readError : Types.FetchFeedResponse = {
           isOK = false;
           message = "Failed to read the feed: " # error;
           feedItems = [];
         };
 
-        return response;
+        return readError;
       };
     };
+  };
+
+  public func analyze_feed(feedItemLink : Text) : async Types.AnalyzeFeedResponse {
+    let defaultValue : Types.AnalyzeFeedResponse = {
+      isOK = false;
+      message = "Something went wrong";
+      result = "";
+    };
+
+    let feedItemPage : Blob = await navigate_to_url(feedItemLink);
+    let requestBody : Blob = if (Text.endsWith(feedItemLink, #text ".pdf")) {
+      OpenAI.createFileInputRequest(feedItemPage);
+    } else {
+      let decodedText : Text = switch (Text.decodeUtf8(feedItemPage)) {
+        case (null) { return defaultValue };
+        case (?y) { y };
+      };
+
+      let textParts = Iter.toArray(Text.split(decodedText, #text "</head>"));
+      let finalText = if (textParts.size() > 1) {
+        textParts[1];
+      } else {
+        decodedText;
+      };
+
+      OpenAI.createTextInputRequest(finalText);
+    };
+
+    let apiKey = "";
+    let url = "https://api.openai.com/v1/responses";
+    let requestHeaders = [
+      { name = "Content-Type"; value = "application/json" },
+      {
+        name = "Authorization";
+        value = "Bearer " # apiKey;
+      },
+    ];
+
+    let httpRequest : IC.HttpRequestArgs = {
+      url = url;
+      max_response_bytes = null; //optional for request
+      headers = requestHeaders;
+      body = ?requestBody;
+      method = #post;
+      transform = ?{
+        function = transform;
+        context = Blob.fromArray([]);
+      };
+    };
+
+    let httpResponse : IC.HttpRequestResult = await (with cycles = 230_949_972_000) IC.ic.http_request(httpRequest);
+    let decodedText : Text = switch (Text.decodeUtf8(httpResponse.body)) {
+      case (null) { return defaultValue };
+      case (?y) { y };
+    };
+
+    let result = switch (JSON.parse(decodedText)) {
+      case (#ok(parsed)) {
+        let result = OpenAI.Response(parsed);
+        let response : Types.AnalyzeFeedResponse = {
+          isOK = true;
+          message = "Success";
+          result = result.getText(0, 0);
+        };
+
+        return response;
+      };
+      case (#err(e)) {
+        Debug.print("analyze_feed result error " # debug_show e);
+        return defaultValue;
+      };
+    };
+
+    return result;
+  };
+
+  public query func rate_money_move(moveId : Text, isLiked : Bool) : async Bool {
+    return true;
   };
 
   //function to transform the response
@@ -220,12 +199,9 @@ actor {
     context : Blob;
     response : IC.HttpRequestResult;
   }) : async IC.HttpRequestResult {
-    {
+    return {
       response with headers = [];
     };
   };
 
-  public query func rate_money_move(moveId : Text, isLiked : Bool) : async Bool {
-    return true;
-  };
 };
