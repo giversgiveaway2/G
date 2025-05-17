@@ -1,0 +1,666 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+// Variables
+$primary-color: rgb(0, 230, 118);
+$primary-dark: darken($primary-color, 15%);
+$primary-light: rgba($primary-color, 0.5);
+$dark-bg-color: #050514;
+$dark-accent: #0c0c25;
+$card-bg: rgba(11, 15, 40, 0.75);
+$card-hover-bg: rgba(16, 20, 53, 0.85);
+$text-color: #e6e6ff;
+$highlight-color: #00f6ff;
+$shadow-color: rgba($primary-color, 0.3);
+$logo-glow: 0 0 30px rgba($primary-color, 0.6);
+$button-glow: 0 5px 15px rgba($primary-color, 0.4);
+
+// Mixins
+@mixin glassMorphism {
+  background: rgba(14, 20, 46, 0.55);
+  backdrop-filter: blur(7px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+@mixin neonBorder {
+  border: 1px solid rgba($primary-color, 0.4);
+  box-shadow: 0 0 10px rgba($primary-color, 0.2), inset 0 0 5px rgba($primary-color, 0.1);
+}
+
+@mixin neonText($color) {
+  color: $color;
+  text-shadow: 0 0 5px rgba($color, 0.3), 0 0 10px rgba($color, 0.2);
+}
+
+// Global Styles for the Login Page
+.login-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: $dark-bg-color;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Rajdhani', sans-serif;
+  color: $text-color;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(15, 40, 85, 0.15) 0%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: 1;
+  }
+}
+
+// Background Elements
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%23404' stroke-width='1'%3E%3Cpath d='M769 229L1037 260.9M927 880L731 737 520 660 309 538 40 599 295 764 126.5 879.5 40 599-197 493 102 382-31 229 126.5 79.5-69-63'/%3E%3Cpath d='M-31 229L237 261 390 382 603 493 308.5 537.5 101.5 381.5M370 905L295 764'/%3E%3Cpath d='M520 660L578 842 731 737 840 599 603 493 520 660 295 764 309 538 390 382 539 269 769 229 577.5 41.5 370 105 295 -36 126.5 79.5 237 261 102 382 40 599 -69 737 127 880'/%3E%3Cpath d='M520-140L578.5 42.5 731-63M603 493L539 269 237 261 370 105M902 382L539 269M390 382L102 382'/%3E%3Cpath d='M-222 42L126.5 79.5 370 105 539 269 577.5 41.5 927 80 769 229 902 382 603 493 731 737M295-36L577.5 41.5M578 842L295 764M40-201L127 80M102 382L-261 269'/%3E%3C/g%3E%3Cg fill='%23505'%3E%3Ccircle cx='769' cy='229' r='5'/%3E%3Ccircle cx='539' cy='269' r='5'/%3E%3Ccircle cx='603' cy='493' r='5'/%3E%3Ccircle cx='731' cy='737' r='5'/%3E%3Ccircle cx='520' cy='660' r='5'/%3E%3Ccircle cx='309' cy='538' r='5'/%3E%3Ccircle cx='295' cy='764' r='5'/%3E%3Ccircle cx='40' cy='599' r='5'/%3E%3Ccircle cx='102' cy='382' r='5'/%3E%3Ccircle cx='127' cy='80' r='5'/%3E%3Ccircle cx='370' cy='105' r='5'/%3E%3Ccircle cx='578' cy='42' r='5'/%3E%3Ccircle cx='237' cy='261' r='5'/%3E%3Ccircle cx='390' cy='382' r='5'/%3E%3C/g%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+.twinkling {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.8),
+                0 0 2px rgba(255, 255, 255, 0.8),
+                0 0 3px rgba(255, 255, 255, 0.8),
+                0 0 100px rgba(0, 200, 255, 0.1),
+                0 0 150px rgba(0, 200, 255, 0.1);
+    animation: twinkling 12s infinite linear;
+  }
+}
+
+@keyframes twinkling {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0.2; }
+}
+
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, rgba($primary-color, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba($primary-color, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 1;
+}
+
+.background-chart {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.15;
+  z-index: 1;
+}
+
+// Floating Orbs Animation
+.floating-orbs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba($primary-color, 0.7), rgba($highlight-color, 0.2));
+    opacity: 0.2;
+    filter: blur(2px);
+    
+    @for $i from 0 through 9 {
+      &.orb-#{$i} {
+        width: random(100) + 20px;
+        height: random(100) + 20px;
+        left: random(100) + 0%;
+        top: random(100) + 0%;
+        animation: float-#{$i} #{random(20) + 15}s infinite ease-in-out;
+      }
+      
+      @keyframes float-#{$i} {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(#{random(50) - 25}px, #{random(50) - 25}px) rotate(#{random(90)}deg); }
+        66% { transform: translate(#{random(50) - 25}px, #{random(50) - 25}px) rotate(#{random(180)}deg); }
+        100% { transform: translate(0, 0) rotate(0deg); }
+      }
+    }
+  }
+}
+
+// Logo Top Left Corner
+.logo-container {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  z-index: 10;
+  
+  .main-logo {
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(0 0 10px rgba($primary-color, 0.6));
+    z-index: 3;
+    
+    &.pulse {
+      animation: pulse 3s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { filter: drop-shadow(0 0 5px rgba($primary-color, 0.6)); }
+      50% { filter: drop-shadow(0 0 20px rgba($primary-color, 0.8)); }
+      100% { filter: drop-shadow(0 0 5px rgba($primary-color, 0.6)); }
+    }
+  }
+  
+  .logo-rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    
+    .ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba($primary-color, 0.2);
+      
+      &.ring1 {
+        width: 90px;
+        height: 90px;
+        animation: rotate 15s linear infinite;
+      }
+      
+      &.ring2 {
+        width: 120px;
+        height: 120px;
+        animation: rotate 25s linear infinite reverse;
+      }
+      
+      @keyframes rotate {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+    }
+  }
+}
+
+// Login Content
+.login-content {  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  z-index: 2;
+  margin-top: 40px;
+}
+
+.main-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 10px 0 5px;
+  letter-spacing: 2px;
+  @include neonText($primary-color);
+}
+
+.glitch-text {
+  position: relative;
+  
+  .glitch-effect {
+    position: relative;
+    margin-right: 10px;
+    
+    &::before,
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    &::before {
+      left: 2px;
+      text-shadow: -1px 0 $highlight-color;
+      clip: rect(44px, 450px, 56px, 0);
+      animation: glitch-anim-1 5s infinite linear alternate-reverse;
+    }
+    
+    &::after {
+      left: -2px;
+      text-shadow: -1px 0 $primary-color;
+      clip: rect(44px, 450px, 56px, 0);
+      animation: glitch-anim-2 5s infinite linear alternate-reverse;
+    }
+  }
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip: rect(19px, 9999px, 30px, 0); }
+  5% { clip: rect(84px, 9999px, 95px, 0); }
+  10% { clip: rect(29px, 9999px, 100px, 0); }
+  15% { clip: rect(4px, 9999px, 14px, 0); }
+  20% { clip: rect(42px, 9999px, 53px, 0); }
+  25% { clip: rect(46px, 9999px, 50px, 0); }
+  30% { clip: rect(31px, 9999px, 98px, 0); }
+  100% { clip: rect(31px, 9999px, 98px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(74px, 9999px, 40px, 0); }
+  5% { clip: rect(34px, 9999px, 15px, 0); }
+  10% { clip: rect(89px, 9999px, 60px, 0); }
+  15% { clip: rect(24px, 9999px, 34px, 0); }
+  20% { clip: rect(2px, 9999px, 13px, 0); }
+  25% { clip: rect(56px, 9999px, 10px, 0); }
+  30% { clip: rect(71px, 9999px, 28px, 0); }
+  100% { clip: rect(71px, 9999px, 28px, 0); }
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  opacity: 0.9;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+// Stats Bar
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 10px 0 40px;
+  padding: 15px 30px;
+  border-radius: 20px;
+  @include glassMorphism;
+  
+  .stat-item {
+    text-align: center;
+    
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
+      @include neonText($highlight-color);
+    }
+    
+    .stat-label {
+      font-size: 0.85rem;
+      margin: 5px 0 0;
+      opacity: 0.8;
+    }
+  }
+}
+
+// Service Cards
+.services-container {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 1200px;
+  
+  @media (max-width: 992px) {
+    flex-direction: column;
+    align-items: center;
+    
+    .service-card {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+}
+
+.service-card {
+  position: relative;
+  flex: 1;
+  max-width: 380px;
+  min-height: 280px;
+  padding: 25px;
+  border-radius: 20px;
+  @include glassMorphism;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  &:hover, &.active {
+    background: $card-hover-bg;
+    transform: translateY(-5px);
+    @include neonBorder;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 20px 0 15px;
+    @include neonText($text-color);
+  }
+  
+  p {
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    opacity: 0.9;
+  }
+  
+  .service-icon {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba($primary-color, 0.4), rgba($highlight-color, 0.2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.7;
+    }
+    
+    &.analytics-icon::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z'/%3E%3C/svg%3E");
+    }
+    
+    &.lending-icon::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z'/%3E%3C/svg%3E");
+    }
+    
+    &.game-icon::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E");
+    }
+    
+    .icon-pulse {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba($primary-color, 0.3);
+      animation: iconPulse 2s infinite;
+    }
+    
+    @keyframes iconPulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 0; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+  }
+  
+  .card-footer {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    
+    .highlight-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: $primary-color;
+      background: rgba($primary-color, 0.1);
+      padding: 5px 12px;
+      border-radius: 20px;
+      @include neonText($primary-color);
+    }
+  }
+}
+
+// Buttons
+.game-button {
+  position: relative;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba($dark-accent, 0.8), rgba($dark-bg-color, 0.9));
+  color: $text-color;
+  border: none;
+  border-radius: 25px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  overflow: hidden;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  @include neonBorder;
+  
+  &:hover {
+    color: #fff;
+    box-shadow: $button-glow;
+    
+    .button-glow {
+      opacity: 1;
+    }
+  }
+  
+  .button-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($primary-color, 0.2), transparent);
+    transform: translateX(-100%);
+    animation: buttonGlow 3s infinite;
+    opacity: 0.7;
+    z-index: -1;
+  }
+}
+
+@keyframes buttonGlow {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.login-button-container {
+  position: fixed;
+  bottom: 40px;
+  z-index: 3;
+  
+  .auth-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 35px;
+    background: linear-gradient(135deg, rgba($primary-color, 0.9), rgba($primary-dark, 0.9));
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: $button-glow;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 20px rgba($primary-color, 0.5);
+      
+      .button-glow {
+        opacity: 1;
+      }
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+    
+    .button-logo {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .button-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      animation: buttonGlow 3s infinite;
+      opacity: 0.7;
+      z-index: -1;
+    }
+  }
+}
+
+// Blockchain Animation
+.blockchain-animation {
+  position: absolute;
+  bottom: 100px;
+  right: 50px;
+  width: 60px;
+  height: 320px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+  .block {
+    width: 60px;
+    height: 30px;
+    background: rgba($dark-accent, 0.6);
+    border: 1px solid rgba($primary-color, 0.3);
+    border-radius: 8px;
+    position: relative;
+    animation: float-block 3s infinite ease-in-out;
+    animation-delay: calc(var(--i) * 0.2s);
+    
+    @for $i from 0 through 7 {
+      &.block-#{$i} {
+        --i: #{$i};
+        animation-delay: #{$i * 0.3}s;
+        animation-duration: #{4 + $i * 0.5}s;
+      }
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 100%;
+      border-radius: 8px 0 0 8px;
+      background: rgba($primary-color, 0.5);
+      left: 0;
+      top: 0;
+    }
+    
+    .block-content {
+      position: absolute;
+      width: 35px;
+      height: 10px;
+      background: linear-gradient(90deg, rgba($primary-color, 0.3), transparent);
+      left: 10px;
+      top: 10px;
+    }
+  }
+  
+  @keyframes float-block {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .login-content {
+    padding: 0 15px;
+  }
+  
+  .main-title {
+    font-size: 2.5rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .stats-bar {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    
+    .stat-item {
+      .stat-value {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  
+  .service-card {
+    min-height: auto;
+    padding: 20px;
+    
+    h3 {
+      font-size: 1.3rem;
+    }
+    
+    p {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .login-button-container {
+    bottom: 30px;
+    
+    .auth-button {
+      padding: 10px 25px;
+      font-size: 1rem;
+    }
+  }
+  
+  .blockchain-animation {
+    display: none;
+  }
+}

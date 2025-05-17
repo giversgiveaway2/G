@@ -1,0 +1,636 @@
+/* Game.scss - Styling for G-Platform Mini Games */
+
+// Variables
+$space-bg-color: #0a0e29;
+$space-light-bg: #131c40;
+$text-color: #ffffff;
+$accent-blue: #3498FF;
+$accent-purple: #8a44f7;
+$accent-green: #14f195;
+$accent-pink: #ff49db;
+$accent-orange: #ff7849;
+$button-primary: #3498FF;
+$button-secondary: rgba(52, 152, 255, 0.2);
+$button-hover: #2980e6;
+$shadow-glow: 0 0 15px rgba(52, 152, 255, 0.7);
+$border-radius: 8px;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@mixin button-style {
+  padding: 12px 24px;
+  border-radius: $border-radius;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 8px;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-glow;
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+@mixin starry-background {
+  background-color: $space-bg-color;
+  background-image: 
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+  background-size: 550px 550px, 350px 350px, 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 270px;
+}
+
+// Keyframes
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba(52, 152, 255, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(52, 152, 255, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(52, 152, 255, 0.5); }
+}
+
+@keyframes laser-pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-2px); }
+  40%, 80% { transform: translateX(2px); }
+}
+
+// Main Container
+.game-container {
+  @include flex-column;
+  width: 100%;
+  min-height: 100vh;
+  @include starry-background;
+  color: $text-color;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 16px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+// Header
+.game-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 24px;
+  
+  h1 {
+    font-size: 2.5rem;
+    margin: 16px 0;
+    color: $text-color;
+    text-shadow: 0 0 10px rgba(52, 152, 255, 0.7);
+    letter-spacing: 1px;
+  }
+  
+  .game-stats {
+    display: flex;
+    justify-content: center;
+    background: rgba(10, 14, 41, 0.8);
+    border-radius: $border-radius;
+    padding: 8px 16px;
+    margin: 0 auto;
+    width: fit-content;
+    border: 1px solid rgba(52, 152, 255, 0.3);
+    box-shadow: 0 0 10px rgba(52, 152, 255, 0.2);
+    
+    .stat-item {
+      margin: 0 16px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      
+      &:first-child {
+        color: $accent-green;
+      }
+      
+      &:last-child {
+        color: $accent-orange;
+      }
+    }
+  }
+}
+
+// Game Selection
+.game-selection {
+  @include flex-column;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+  background: rgba(19, 28, 64, 0.7);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    text-align: center;
+    color: $accent-blue;
+    text-shadow: 0 0 8px rgba(52, 152, 255, 0.5);
+  }
+  
+  .game-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    width: 100%;
+    
+    .game-option {
+      @include flex-column;
+      width: calc(50% - 24px);
+      min-width: 280px;
+      background: rgba(10, 14, 41, 0.8);
+      border-radius: $border-radius;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(52, 152, 255, 0.2);
+      
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: $shadow-glow;
+        border-color: $accent-blue;
+      }
+      
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+        color: $accent-blue;
+      }
+      
+      p {
+        text-align: center;
+        margin-bottom: 24px;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      
+      .game-preview {
+        width: 100%;
+        height: 180px;
+        border-radius: $border-radius;
+        overflow: hidden;
+        
+        &.shooter-preview {
+          background: linear-gradient(45deg, #0f2027, #203a43, #2c5364);
+          background-size: 400% 400%;
+          animation: float 6s ease-in-out infinite;
+          position: relative;
+          
+          &::before {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: $accent-blue;
+            bottom: 30px;
+            left: calc(50% - 15px);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform: rotate(180deg);
+            box-shadow: 0 0 10px $accent-blue;
+          }
+          
+          &::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+              radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px);
+            background-size: 200px 200px;
+            opacity: 0.2;
+          }
+        }
+        
+        &.snake-preview {
+          background: linear-gradient(45deg, #16222a, #3a6073);
+          background-size: 400% 400%;
+          animation: float 6s ease-in-out infinite;
+          position: relative;
+          
+          &::before {
+            content: "";
+            position: absolute;
+            width: 60%;
+            height: 10px;
+            background: $accent-green;
+            top: 50%;
+            left: 20%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px $accent-green;
+          }
+          
+          &::after {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: $accent-pink;
+            top: calc(50% - 6px);
+            right: 25%;
+            border-radius: 3px;
+            box-shadow: 0 0 8px $accent-pink;
+          }
+        }
+      }
+      
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Buttons
+.start-button, .restart-button {
+  @include button-style;
+  background-color: $button-primary;
+  color: white;
+  
+  &:hover {
+    background-color: $button-hover;
+  }
+}
+
+.select-button {
+  @include button-style;
+  background-color: $button-secondary;
+  color: $text-color;
+  
+  &:hover {
+    background-color: rgba(52, 152, 255, 0.3);
+  }
+}
+
+.home-button {
+  @include button-style;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: $text-color;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Game Start & Game Over
+.game-start, .game-over {
+  @include flex-column;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 32px;
+  background: rgba(19, 28, 64, 0.8);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    color: $accent-blue;
+    text-shadow: 0 0 8px rgba(52, 152, 255, 0.5);
+  }
+  
+  p {
+    margin-bottom: 24px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    
+    &:last-of-type {
+      margin-bottom: 32px;
+    }
+  }
+}
+
+.game-over {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  
+  h2 {
+    color: $accent-pink;
+    text-shadow: 0 0 8px rgba(255, 73, 219, 0.5);
+  }
+  
+  p {
+    font-size: 1.3rem;
+    font-weight: 600;
+    
+    &:first-of-type {
+      color: $accent-green;
+    }
+  }
+}
+
+// Game Play Areas
+.game-play-area {
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border-radius: $border-radius;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(52, 152, 255, 0.3);
+  
+  // Space Shooter Specific
+  &.space-shooter-area {
+    @include starry-background;
+    cursor: crosshair;
+    
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(19, 28, 64, 0.5),
+        rgba(10, 14, 41, 0.2)
+      );
+      pointer-events: none;
+    }
+    
+    .player-ship {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      margin-left: -20px;
+      margin-bottom: -20px;
+      background-color: $accent-blue;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      box-shadow: 0 0 15px rgba(52, 152, 255, 0.8);
+      transition: left 0.1s ease;
+      z-index: 10;
+      
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        height: 60%;
+        background-color: rgba(255, 255, 255, 0.7);
+        clip-path: polygon(50% 20%, 20% 80%, 80% 80%);
+      }
+    }
+    
+    .enemy {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      transition: top 0.1s linear;
+      
+      &.enemy-pirate {
+        background-color: $accent-orange;
+        border-radius: 50%;
+        box-shadow: 0 0 15px rgba(255, 120, 73, 0.8);
+        clip-path: polygon(
+          0% 50%, 25% 0%, 75% 0%, 
+          100% 50%, 75% 100%, 25% 100%
+        );
+      }
+      
+      &.enemy-ufo {
+        background-color: $accent-purple;
+        box-shadow: 0 0 15px rgba(138, 68, 247, 0.8);
+        clip-path: polygon(
+          20% 0%, 80% 0%, 100% 50%,
+          80% 100%, 20% 100%, 0% 50%
+        );
+        animation: pulse 2s infinite;
+      }
+      
+      &.enemy-bat {
+        background-color: $accent-pink;
+        box-shadow: 0 0 15px rgba(255, 73, 219, 0.8);
+        clip-path: polygon(
+          50% 0%, 100% 50%, 75% 100%,
+          25% 100%, 0% 50%
+        );
+      }
+    }
+    
+    .laser {
+      position: absolute;
+      background-color: white;
+      transform: translate(-50%, 0);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+                  0 0 16px rgba(52, 152, 255, 0.6);
+      border-radius: 2px;
+      animation: laser-pulse 0.5s infinite;
+    }
+  }
+  
+  // Snake Game Specific
+  &.snake-game-area {
+    background-color: rgba(10, 14, 41, 0.9);
+    display: grid;
+    grid-template-columns: repeat(20, 5%);
+    grid-template-rows: repeat(20, 5%);
+    grid-gap: 0;
+    
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(19, 28, 64, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(19, 28, 64, 0.3) 1px, transparent 1px);
+      background-size: 5% 5%;
+      pointer-events: none;
+    }
+    
+    .snake-segment {
+      position: absolute;
+      background-color: $accent-green;
+      border-radius: 2px;
+      box-shadow: 0 0 8px rgba(20, 241, 149, 0.6);
+      z-index: 10;
+      
+      &.snake-head {
+        background-color: lighten($accent-green, 10%);
+        box-shadow: 0 0 12px rgba(20, 241, 149, 0.8);
+        
+        &::after {
+          content: "";
+          position: absolute;
+          top: 25%;
+          left: 25%;
+          width: 50%;
+          height: 50%;
+          background-color: rgba(255, 255, 255, 0.7);
+          border-radius: 1px;
+        }
+      }
+    }
+    
+    .snake-food {
+      position: absolute;
+      background-color: $accent-pink;
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(255, 73, 219, 0.8);
+      animation: pulse 2s infinite;
+      z-index: 5;
+    }
+    
+    .snake-enemy {
+      position: absolute;
+      z-index: 8;
+      
+      &.enemy-pirate {
+        background-color: $accent-orange;
+        box-shadow: 0 0 10px rgba(255, 120, 73, 0.7);
+        clip-path: polygon(
+          50% 0%, 100% 35%, 100% 65%,
+          50% 100%, 0% 65%, 0% 35%
+        );
+      }
+      
+      &.enemy-ufo {
+        background-color: $accent-purple;
+        box-shadow: 0 0 10px rgba(138, 68, 247, 0.7);
+        border-radius: 50%;
+        
+        &::after {
+          content: "";
+          position: absolute;
+          top: 30%;
+          left: 30%;
+          width: 40%;
+          height: 40%;
+          background-color: rgba(255, 255, 255, 0.5);
+          border-radius: 50%;
+        }
+      }
+      
+      &.enemy-bat {
+        background-color: $accent-pink;
+        box-shadow: 0 0 10px rgba(255, 73, 219, 0.7);
+        clip-path: polygon(
+          50% 0%, 80% 40%, 100% 80%,
+          80% 100%, 20% 100%, 0% 80%,
+          20% 40%
+        );
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    aspect-ratio: 3 / 4;
+    max-width: 100%;
+    
+    &.space-shooter-area {
+      .player-ship {
+        width: 30px;
+        height: 30px;
+        margin-left: -15px;
+        margin-bottom: -15px;
+      }
+      
+      .enemy {
+        transform: scale(0.8);
+      }
+    }
+  }
+}
+
+// Responsive Adjustments
+@media (max-width: 768px) {
+  .game-header {
+    h1 {
+      font-size: 1.8rem;
+    }
+    
+    .game-stats {
+      .stat-item {
+        font-size: 1rem;
+        margin: 0 8px;
+      }
+    }
+  }
+  
+  .game-start, .game-over {
+    padding: 24px 16px;
+    
+    h2 {
+      font-size: 1.7rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+  
+  .game-selection {
+    padding: 16px;
+    
+    h2 {
+      font-size: 1.7rem;
+    }
+    
+    .game-options {
+      .game-option {
+        padding: 16px;
+        
+        h3 {
+          font-size: 1.3rem;
+        }
+        
+        p {
+          font-size: 0.9rem;
+        }
+        
+        .game-preview {
+          height: 150px;
+        }
+      }
+    }
+  }
+  
+  .start-button, .restart-button, .select-button, .home-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

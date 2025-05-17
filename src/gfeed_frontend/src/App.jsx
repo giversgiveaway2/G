@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
-import Login from './pages/Login/Login'; // Import the separated Login component
+import Login from './pages/Login/Login';
+import Game from './pages/MiniGame/Game'; // Import the Game component
 import { AuthClient } from '@dfinity/auth-client';
 import { HttpAgent } from '@dfinity/agent';
 
@@ -129,6 +130,11 @@ function App() {
                   <Home />
                 </ProtectedRoute>
               } 
+            />
+            {/* Public game route - no authentication required */}
+            <Route 
+              path="/pages/MiniGame/Game" 
+              element={<Game />} 
             />
             <Route 
               path="/" 

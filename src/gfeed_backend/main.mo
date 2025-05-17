@@ -14,18 +14,6 @@ actor {
   public shared(msg) func whoami() : async Text {
     return Principal.toText(msg.caller);
   };
-  
-  // Example of a protected function that only authenticated users can call
-  public shared(msg) func greetAuthenticated() : async Text {
-    let caller = Principal.toText(msg.caller);
-    
-    // Check if anonymous principal
-    if (Principal.isAnonymous(msg.caller)) {
-      return "You are not authenticated!";
-    };
-    
-    return "Hello, authenticated user with principal: " # caller;
-  };
 
   public type FeedItem = {
     title : Text;

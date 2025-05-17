@@ -307,3 +307,37 @@ main {
   flex-direction: column;
   align-items: center;
 }
+
+/* Add this to your CSS file or create a new file for game styles */
+
+.game-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-top: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.game-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
+}
+
+/* You can add these to your Login.css if needed to improve button positioning */
+.service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.service-card p {
+  margin-bottom: 8px;
+}
