@@ -5,6 +5,7 @@ import Login from './pages/Login/Login';
 import Game from './pages/MiniGame/Game'; // Import the Game component
 import { AuthClient } from '@dfinity/auth-client';
 import { HttpAgent } from '@dfinity/agent';
+import Lending from './pages/Lending/Lending'; // Import the Lending component
 
 // Create a protected route component
 const ProtectedRoute = ({ isAuthenticated, children }) => {
@@ -135,6 +136,10 @@ function App() {
             <Route 
               path="/pages/MiniGame/Game" 
               element={<Game />} 
+            />
+            <Route 
+              path="/pages/Lending/Lending" 
+              element={<Lending />} 
             />
             <Route 
               path="/" 

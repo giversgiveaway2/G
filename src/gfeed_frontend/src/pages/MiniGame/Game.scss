@@ -1,21 +1,44 @@
-/* Game.scss - Styling for G-Platform Mini Games */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 // Variables
-$space-bg-color: #0a0e29;
-$space-light-bg: #131c40;
-$text-color: #ffffff;
-$accent-blue: #3498FF;
-$accent-purple: #8a44f7;
-$accent-green: #14f195;
+$primary-color: rgb(0, 230, 118);
+$primary-dark: darken($primary-color, 15%);
+$primary-light: rgba($primary-color, 0.5);
+$dark-bg-color: #050514;
+$dark-accent: #0c0c25;
+$card-bg: rgba(11, 15, 40, 0.75);
+$card-hover-bg: rgba(16, 20, 53, 0.85);
+$text-color: #e6e6ff;
+$highlight-color: #00f6ff;
+$shadow-color: rgba($primary-color, 0.3);
+$logo-glow: 0 0 30px rgba($primary-color, 0.6);
+$button-glow: 0 5px 15px rgba($primary-color, 0.4);
+$border-radius: 20px;
+
+// Additional color variants for game elements
+$accent-blue: $highlight-color;
+$accent-purple: #9c44ff;
 $accent-pink: #ff49db;
 $accent-orange: #ff7849;
-$button-primary: #3498FF;
-$button-secondary: rgba(52, 152, 255, 0.2);
-$button-hover: #2980e6;
-$shadow-glow: 0 0 15px rgba(52, 152, 255, 0.7);
-$border-radius: 8px;
 
 // Mixins
+@mixin glassMorphism {
+  background: rgba(14, 20, 46, 0.55);
+  backdrop-filter: blur(7px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+@mixin neonBorder {
+  border: 1px solid rgba($primary-color, 0.4);
+  box-shadow: 0 0 10px rgba($primary-color, 0.2), inset 0 0 5px rgba($primary-color, 0.1);
+}
+
+@mixin neonText($color) {
+  color: $color;
+  text-shadow: 0 0 5px rgba($color, 0.3), 0 0 10px rgba($color, 0.2);
+}
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
@@ -26,36 +49,6 @@ $border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-@mixin button-style {
-  padding: 12px 24px;
-  border-radius: $border-radius;
-  border: none;
-  font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin: 8px;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: $shadow-glow;
-  }
-  
-  &:active {
-    transform: translateY(1px);
-  }
-}
-
-@mixin starry-background {
-  background-color: $space-bg-color;
-  background-image: 
-    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
-    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
-    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
-  background-size: 550px 550px, 350px 350px, 250px 250px;
-  background-position: 0 0, 40px 60px, 130px 270px;
 }
 
 // Keyframes
@@ -72,9 +65,15 @@ $border-radius: 8px;
 }
 
 @keyframes glow {
-  0% { box-shadow: 0 0 5px rgba(52, 152, 255, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(52, 152, 255, 0.8); }
-  100% { box-shadow: 0 0 5px rgba(52, 152, 255, 0.5); }
+  0% { box-shadow: 0 0 5px rgba($primary-color, 0.5); }
+  50% { box-shadow: 0 0 20px rgba($primary-color, 0.8); }
+  100% { box-shadow: 0 0 5px rgba($primary-color, 0.5); }
+}
+
+@keyframes twinkling {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0.2; }
 }
 
 @keyframes laser-pulse {
@@ -89,18 +88,170 @@ $border-radius: 8px;
   40%, 80% { transform: translateX(2px); }
 }
 
+@keyframes buttonGlow {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 // Main Container
 .game-container {
-  @include flex-column;
-  width: 100%;
-  min-height: 100vh;
-  @include starry-background;
-  color: $text-color;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 16px;
-  box-sizing: border-box;
   position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: $dark-bg-color;
   overflow: hidden;
+  @include flex-column;
+  font-family: 'Rajdhani', sans-serif;
+  color: $text-color;
+  padding: 20px;
+  box-sizing: border-box;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(15, 40, 85, 0.15) 0%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: 1;
+  }
+}
+
+// Background Elements
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%23404' stroke-width='1'%3E%3Cpath d='M769 229L1037 260.9M927 880L731 737 520 660 309 538 40 599 295 764 126.5 879.5 40 599-197 493 102 382-31 229 126.5 79.5-69-63'/%3E%3Cpath d='M-31 229L237 261 390 382 603 493 308.5 537.5 101.5 381.5M370 905L295 764'/%3E%3Cpath d='M520 660L578 842 731 737 840 599 603 493 520 660 295 764 309 538 390 382 539 269 769 229 577.5 41.5 370 105 295 -36 126.5 79.5 237 261 102 382 40 599 -69 737 127 880'/%3E%3Cpath d='M520-140L578.5 42.5 731-63M603 493L539 269 237 261 370 105M902 382L539 269M390 382L102 382'/%3E%3Cpath d='M-222 42L126.5 79.5 370 105 539 269 577.5 41.5 927 80 769 229 902 382 603 493 731 737M295-36L577.5 41.5M578 842L295 764M40-201L127 80M102 382L-261 269'/%3E%3C/g%3E%3Cg fill='%23505'%3E%3Ccircle cx='769' cy='229' r='5'/%3E%3Ccircle cx='539' cy='269' r='5'/%3E%3Ccircle cx='603' cy='493' r='5'/%3E%3Ccircle cx='731' cy='737' r='5'/%3E%3Ccircle cx='520' cy='660' r='5'/%3E%3Ccircle cx='309' cy='538' r='5'/%3E%3Ccircle cx='295' cy='764' r='5'/%3E%3Ccircle cx='40' cy='599' r='5'/%3E%3Ccircle cx='102' cy='382' r='5'/%3E%3Ccircle cx='127' cy='80' r='5'/%3E%3Ccircle cx='370' cy='105' r='5'/%3E%3Ccircle cx='578' cy='42' r='5'/%3E%3Ccircle cx='237' cy='261' r='5'/%3E%3Ccircle cx='390' cy='382' r='5'/%3E%3C/g%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+.twinkling {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.8),
+                0 0 2px rgba(255, 255, 255, 0.8),
+                0 0 3px rgba(255, 255, 255, 0.8),
+                0 0 100px rgba(0, 200, 255, 0.1),
+                0 0 150px rgba(0, 200, 255, 0.1);
+    animation: twinkling 12s infinite linear;
+  }
+}
+
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, rgba($primary-color, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba($primary-color, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 1;
+}
+
+// Floating Orbs Animation
+.floating-orbs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba($primary-color, 0.7), rgba($highlight-color, 0.2));
+    opacity: 0.2;
+    filter: blur(2px);
+    
+    @for $i from 0 through 9 {
+      &.orb-#{$i} {
+        width: random(100) + 20px;
+        height: random(100) + 20px;
+        left: random(100) + 0%;
+        top: random(100) + 0%;
+        animation: float-#{$i} #{random(20) + 15}s infinite ease-in-out;
+      }
+      
+      @keyframes float-#{$i} {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(#{random(50) - 25}px, #{random(50) - 25}px) rotate(#{random(90)}deg); }
+        66% { transform: translate(#{random(50) - 25}px, #{random(50) - 25}px) rotate(#{random(180)}deg); }
+        100% { transform: translate(0, 0) rotate(0deg); }
+      }
+    }
+  }
+}
+
+// Logo Top Left Corner
+.logo-container {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+  z-index: 10;
+  
+  .main-logo {
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(0 0 10px rgba($primary-color, 0.6));
+    z-index: 3;
+    
+    &.pulse {
+      animation: pulse 3s infinite;
+    }
+  }
+  
+  .logo-rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    
+    .ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba($primary-color, 0.2);
+      
+      &.ring1 {
+        width: 90px;
+        height: 90px;
+        animation: rotate 15s linear infinite;
+      }
+      
+      &.ring2 {
+        width: 120px;
+        height: 120px;
+        animation: rotate 25s linear infinite reverse;
+      }
+    }
+  }
 }
 
 // Header
@@ -108,37 +259,41 @@ $border-radius: 8px;
   width: 100%;
   text-align: center;
   margin-bottom: 24px;
+  z-index: 2;
   
   h1 {
+    font-family: 'Space Mono', monospace;
     font-size: 2.5rem;
+    font-weight: 700;
     margin: 16px 0;
-    color: $text-color;
-    text-shadow: 0 0 10px rgba(52, 152, 255, 0.7);
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    @include neonText($primary-color);
   }
   
   .game-stats {
     display: flex;
     justify-content: center;
-    background: rgba(10, 14, 41, 0.8);
+    gap: 40px;
+    margin: 10px auto 30px;
+    padding: 15px 30px;
     border-radius: $border-radius;
-    padding: 8px 16px;
-    margin: 0 auto;
     width: fit-content;
-    border: 1px solid rgba(52, 152, 255, 0.3);
-    box-shadow: 0 0 10px rgba(52, 152, 255, 0.2);
+    @include glassMorphism;
     
     .stat-item {
-      margin: 0 16px;
-      font-size: 1.2rem;
-      font-weight: 600;
+      text-align: center;
       
-      &:first-child {
-        color: $accent-green;
+      .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0;
+        @include neonText($highlight-color);
       }
       
-      &:last-child {
-        color: $accent-orange;
+      .stat-label {
+        font-size: 0.85rem;
+        margin: 5px 0 0;
+        opacity: 0.8;
       }
     }
   }
@@ -147,58 +302,61 @@ $border-radius: 8px;
 // Game Selection
 .game-selection {
   @include flex-column;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
-  background: rgba(19, 28, 64, 0.7);
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: $border-radius;
+  z-index: 2;
   
   h2 {
+    font-family: 'Space Mono', monospace;
     font-size: 2rem;
+    font-weight: 600;
     margin-bottom: 24px;
     text-align: center;
-    color: $accent-blue;
-    text-shadow: 0 0 8px rgba(52, 152, 255, 0.5);
+    @include neonText($highlight-color);
   }
   
   .game-options {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 24px;
+    gap: 25px;
     margin-bottom: 32px;
     width: 100%;
     
     .game-option {
-      @include flex-column;
-      width: calc(50% - 24px);
-      min-width: 280px;
-      background: rgba(10, 14, 41, 0.8);
+      position: relative;
+      flex: 1;
+      max-width: 380px;
+      min-height: 280px;
+      padding: 25px;
       border-radius: $border-radius;
-      padding: 24px;
-      cursor: pointer;
+      @include glassMorphism;
       transition: all 0.3s ease;
-      border: 1px solid rgba(52, 152, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       
-      &:hover {
-        transform: translateY(-8px);
-        box-shadow: $shadow-glow;
-        border-color: $accent-blue;
+      &:hover, &.active {
+        background: $card-hover-bg;
+        transform: translateY(-5px);
+        @include neonBorder;
       }
       
       h3 {
         font-size: 1.5rem;
-        margin-bottom: 12px;
-        color: $accent-blue;
+        font-weight: 600;
+        margin: 20px 0 15px;
+        @include neonText($text-color);
       }
       
       p {
+        font-size: 1rem;
         text-align: center;
-        margin-bottom: 24px;
         line-height: 1.5;
-        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 25px;
+        opacity: 0.9;
       }
       
       .game-preview {
@@ -206,10 +364,10 @@ $border-radius: 8px;
         height: 180px;
         border-radius: $border-radius;
         overflow: hidden;
+        position: relative;
         
         &.shooter-preview {
-          background: linear-gradient(45deg, #0f2027, #203a43, #2c5364);
-          background-size: 400% 400%;
+          background: linear-gradient(135deg, $dark-accent, $dark-bg-color);
           animation: float 6s ease-in-out infinite;
           position: relative;
           
@@ -218,12 +376,12 @@ $border-radius: 8px;
             position: absolute;
             width: 30px;
             height: 30px;
-            background: $accent-blue;
+            background: $primary-color;
             bottom: 30px;
             left: calc(50% - 15px);
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
             transform: rotate(180deg);
-            box-shadow: 0 0 10px $accent-blue;
+            box-shadow: 0 0 10px $primary-color;
           }
           
           &::after {
@@ -239,8 +397,7 @@ $border-radius: 8px;
         }
         
         &.snake-preview {
-          background: linear-gradient(45deg, #16222a, #3a6073);
-          background-size: 400% 400%;
+          background: linear-gradient(135deg, $dark-accent, $dark-bg-color);
           animation: float 6s ease-in-out infinite;
           position: relative;
           
@@ -249,11 +406,11 @@ $border-radius: 8px;
             position: absolute;
             width: 60%;
             height: 10px;
-            background: $accent-green;
+            background: $primary-color;
             top: 50%;
             left: 20%;
             border-radius: 5px;
-            box-shadow: 0 0 10px $accent-green;
+            box-shadow: 0 0 10px $primary-color;
           }
           
           &::after {
@@ -270,41 +427,182 @@ $border-radius: 8px;
         }
       }
       
+      .service-icon {
+        position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba($primary-color, 0.4), rgba($highlight-color, 0.2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 5px;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background-size: cover;
+          background-position: center;
+          opacity: 0.7;
+        }
+        
+        &.shooter-icon::before {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E");
+        }
+        
+        &.snake-icon::before {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z'/%3E%3C/svg%3E");
+        }
+        
+        .icon-pulse {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: rgba($primary-color, 0.3);
+          animation: iconPulse 2s infinite;
+        }
+        
+        @keyframes iconPulse {
+          0% { transform: scale(1); opacity: 0.7; }
+          50% { transform: scale(1.3); opacity: 0; }
+          100% { transform: scale(1); opacity: 0; }
+        }
+      }
+      
+      .card-footer {
+        margin-top: auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        
+        .highlight-text {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: $primary-color;
+          background: rgba($primary-color, 0.1);
+          padding: 5px 12px;
+          border-radius: 20px;
+          @include neonText($primary-color);
+        }
+      }
+      
       @media (max-width: 768px) {
         width: 100%;
+        min-height: auto;
+        max-width: 500px;
       }
     }
   }
 }
 
 // Buttons
-.start-button, .restart-button {
-  @include button-style;
-  background-color: $button-primary;
-  color: white;
+.game-button {
+  position: relative;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba($dark-accent, 0.8), rgba($dark-bg-color, 0.9));
+  color: $text-color;
+  border: none;
+  border-radius: 25px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  overflow: hidden;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  @include neonBorder;
   
   &:hover {
-    background-color: $button-hover;
+    color: #fff;
+    box-shadow: $button-glow;
+    
+    .button-glow {
+      opacity: 1;
+    }
+  }
+  
+  .button-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($primary-color, 0.2), transparent);
+    transform: translateX(-100%);
+    animation: buttonGlow 3s infinite;
+    opacity: 0.7;
+    z-index: -1;
+  }
+}
+
+.start-button, .restart-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 35px;
+  background: linear-gradient(135deg, rgba($primary-color, 0.9), rgba($primary-dark, 0.9));
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: $button-glow;
+  margin: 8px;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba($primary-color, 0.5);
+    
+    .button-glow {
+      opacity: 1;
+    }
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
+  
+  .button-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    animation: buttonGlow 3s infinite;
+    opacity: 0.7;
+    z-index: -1;
   }
 }
 
 .select-button {
-  @include button-style;
-  background-color: $button-secondary;
-  color: $text-color;
+  @extend .game-button;
+  background: linear-gradient(135deg, rgba($primary-color, 0.2), rgba($dark-bg-color, 0.8));
   
   &:hover {
-    background-color: rgba(52, 152, 255, 0.3);
+    background: linear-gradient(135deg, rgba($primary-color, 0.3), rgba($dark-bg-color, 0.9));
   }
 }
 
 .home-button {
-  @include button-style;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: $text-color;
+  @extend .game-button;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba($dark-bg-color, 0.8));
   
   &:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba($dark-bg-color, 0.9));
   }
 }
 
@@ -314,17 +612,16 @@ $border-radius: 8px;
   max-width: 600px;
   margin: 0 auto;
   padding: 32px;
-  background: rgba(19, 28, 64, 0.8);
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: $border-radius;
   text-align: center;
+  z-index: 2;
+  @include glassMorphism;
   
   h2 {
+    font-family: 'Space Mono', monospace;
     font-size: 2rem;
     margin-bottom: 16px;
-    color: $accent-blue;
-    text-shadow: 0 0 8px rgba(52, 152, 255, 0.5);
+    @include neonText($highlight-color);
   }
   
   p {
@@ -337,6 +634,61 @@ $border-radius: 8px;
       margin-bottom: 32px;
     }
   }
+  
+  .glitch-text {
+    position: relative;
+    
+    .glitch-effect {
+      position: relative;
+      margin-right: 10px;
+      
+      &::before,
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      
+      &::before {
+        left: 2px;
+        text-shadow: -1px 0 $highlight-color;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim-1 5s infinite linear alternate-reverse;
+      }
+      
+      &::after {
+        left: -2px;
+        text-shadow: -1px 0 $primary-color;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim-2 5s infinite linear alternate-reverse;
+      }
+    }
+  }
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip: rect(19px, 9999px, 30px, 0); }
+  5% { clip: rect(84px, 9999px, 95px, 0); }
+  10% { clip: rect(29px, 9999px, 100px, 0); }
+  15% { clip: rect(4px, 9999px, 14px, 0); }
+  20% { clip: rect(42px, 9999px, 53px, 0); }
+  25% { clip: rect(46px, 9999px, 50px, 0); }
+  30% { clip: rect(31px, 9999px, 98px, 0); }
+  100% { clip: rect(31px, 9999px, 98px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(74px, 9999px, 40px, 0); }
+  5% { clip: rect(34px, 9999px, 15px, 0); }
+  10% { clip: rect(89px, 9999px, 60px, 0); }
+  15% { clip: rect(24px, 9999px, 34px, 0); }
+  20% { clip: rect(2px, 9999px, 13px, 0); }
+  25% { clip: rect(56px, 9999px, 10px, 0); }
+  30% { clip: rect(71px, 9999px, 28px, 0); }
+  100% { clip: rect(71px, 9999px, 28px, 0); }
 }
 
 .game-over {
@@ -352,7 +704,7 @@ $border-radius: 8px;
     font-weight: 600;
     
     &:first-of-type {
-      color: $accent-green;
+      color: $primary-color;
     }
   }
 }
@@ -366,14 +718,15 @@ $border-radius: 8px;
   border-radius: $border-radius;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(52, 152, 255, 0.3);
-  
+  border: 1px solid rgba($primary-color, 0.4);
+  box-shadow: 0 0 10px rgba($primary-color, 0.2), inset 0 0 5px rgba($primary-color, 0.1);
+  z-index: 2;
+
   // Space Shooter Specific
   &.space-shooter-area {
-    @include starry-background;
+    background-color: $dark-bg-color;
     cursor: crosshair;
-    
+
     &::before {
       content: "";
       position: absolute;
@@ -381,256 +734,140 @@ $border-radius: 8px;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(
-        to bottom,
-        rgba(19, 28, 64, 0.5),
-        rgba(10, 14, 41, 0.2)
+      background: radial-gradient(
+        ellipse at center,
+        rgba($primary-color, 0.05) 0%,
+        rgba($dark-bg-color, 0.9) 100%
       );
+      z-index: 1;
       pointer-events: none;
     }
-    
-    .player-ship {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      margin-left: -20px;
-      margin-bottom: -20px;
-      background-color: $accent-blue;
-      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-      box-shadow: 0 0 15px rgba(52, 152, 255, 0.8);
-      transition: left 0.1s ease;
-      z-index: 10;
-      
-      &::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 60%;
-        height: 60%;
-        background-color: rgba(255, 255, 255, 0.7);
-        clip-path: polygon(50% 20%, 20% 80%, 80% 80%);
-      }
-    }
-    
-    .enemy {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      transition: top 0.1s linear;
-      
-      &.enemy-pirate {
-        background-color: $accent-orange;
-        border-radius: 50%;
-        box-shadow: 0 0 15px rgba(255, 120, 73, 0.8);
-        clip-path: polygon(
-          0% 50%, 25% 0%, 75% 0%, 
-          100% 50%, 75% 100%, 25% 100%
-        );
-      }
-      
-      &.enemy-ufo {
-        background-color: $accent-purple;
-        box-shadow: 0 0 15px rgba(138, 68, 247, 0.8);
-        clip-path: polygon(
-          20% 0%, 80% 0%, 100% 50%,
-          80% 100%, 20% 100%, 0% 50%
-        );
-        animation: pulse 2s infinite;
-      }
-      
-      &.enemy-bat {
-        background-color: $accent-pink;
-        box-shadow: 0 0 15px rgba(255, 73, 219, 0.8);
-        clip-path: polygon(
-          50% 0%, 100% 50%, 75% 100%,
-          25% 100%, 0% 50%
-        );
-      }
-    }
-    
-    .laser {
-      position: absolute;
-      background-color: white;
-      transform: translate(-50%, 0);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
-                  0 0 16px rgba(52, 152, 255, 0.6);
-      border-radius: 2px;
-      animation: laser-pulse 0.5s infinite;
-    }
-  }
-  
-  // Snake Game Specific
-  &.snake-game-area {
-    background-color: rgba(10, 14, 41, 0.9);
-    display: grid;
-    grid-template-columns: repeat(20, 5%);
-    grid-template-rows: repeat(20, 5%);
-    grid-gap: 0;
-    
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
+
+    canvas {
+      position: relative;
+      z-index: 2;
+      display: block;
       width: 100%;
       height: 100%;
-      background-image: 
-        linear-gradient(rgba(19, 28, 64, 0.3) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(19, 28, 64, 0.3) 1px, transparent 1px);
-      background-size: 5% 5%;
-      pointer-events: none;
-    }
-    
-    .snake-segment {
-      position: absolute;
-      background-color: $accent-green;
-      border-radius: 2px;
-      box-shadow: 0 0 8px rgba(20, 241, 149, 0.6);
-      z-index: 10;
-      
-      &.snake-head {
-        background-color: lighten($accent-green, 10%);
-        box-shadow: 0 0 12px rgba(20, 241, 149, 0.8);
-        
-        &::after {
-          content: "";
-          position: absolute;
-          top: 25%;
-          left: 25%;
-          width: 50%;
-          height: 50%;
-          background-color: rgba(255, 255, 255, 0.7);
-          border-radius: 1px;
-        }
-      }
-    }
-    
-    .snake-food {
-      position: absolute;
-      background-color: $accent-pink;
-      border-radius: 2px;
-      box-shadow: 0 0 10px rgba(255, 73, 219, 0.8);
-      animation: pulse 2s infinite;
-      z-index: 5;
-    }
-    
-    .snake-enemy {
-      position: absolute;
-      z-index: 8;
-      
-      &.enemy-pirate {
-        background-color: $accent-orange;
-        box-shadow: 0 0 10px rgba(255, 120, 73, 0.7);
-        clip-path: polygon(
-          50% 0%, 100% 35%, 100% 65%,
-          50% 100%, 0% 65%, 0% 35%
-        );
-      }
-      
-      &.enemy-ufo {
-        background-color: $accent-purple;
-        box-shadow: 0 0 10px rgba(138, 68, 247, 0.7);
-        border-radius: 50%;
-        
-        &::after {
-          content: "";
-          position: absolute;
-          top: 30%;
-          left: 30%;
-          width: 40%;
-          height: 40%;
-          background-color: rgba(255, 255, 255, 0.5);
-          border-radius: 50%;
-        }
-      }
-      
-      &.enemy-bat {
-        background-color: $accent-pink;
-        box-shadow: 0 0 10px rgba(255, 73, 219, 0.7);
-        clip-path: polygon(
-          50% 0%, 80% 40%, 100% 80%,
-          80% 100%, 20% 100%, 0% 80%,
-          20% 40%
-        );
-      }
     }
   }
-  
-  @media (max-width: 768px) {
-    aspect-ratio: 3 / 4;
-    max-width: 100%;
-    
-    &.space-shooter-area {
-      .player-ship {
-        width: 30px;
-        height: 30px;
-        margin-left: -15px;
-        margin-bottom: -15px;
-      }
-      
-      .enemy {
-        transform: scale(0.8);
-      }
+
+  // Add more specific styles for other game types if needed
+}
+
+.game-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+  margin-bottom: 32px;
+
+  .game-card {
+    background-color: $card-bg;
+    border-radius: $border-radius;
+    padding: 20px;
+    width: 250px;
+    height: 320px;
+    @include flex-column;
+    justify-content: space-between;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    @include glassMorphism;
+    @include neonBorder;
+
+    &:hover {
+      background-color: $card-hover-bg;
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 0 20px rgba($primary-color, 0.3);
+    }
+
+    .game-thumbnail {
+      width: 100%;
+      height: 150px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 10px rgba($primary-color, 0.2);
+    }
+
+    .game-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 8px;
+      @include neonText($accent-blue);
+    }
+
+    .game-description {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      text-align: center;
+      padding: 0 8px;
     }
   }
 }
 
+
+// Action Button
+.action-button {
+background-color: transparent;
+color: $primary-color;
+font-family: 'Space Mono', monospace;
+font-size: 1.1rem;
+font-weight: 600;
+padding: 12px 28px;
+border: 2px solid $primary-color;
+border-radius: $border-radius;
+cursor: pointer;
+position: relative;
+overflow: hidden;
+z-index: 2;
+@include neonText($primary-color);
+transition: all 0.3s ease;
+
+&::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba($primary-color, 0.3), transparent);
+  animation: buttonGlow 2.5s infinite;
+}
+
+&:hover {
+  background-color: $primary-dark;
+  color: white;
+  box-shadow: $button-glow;
+  border-color: lighten($primary-color, 5%);
+}
+}
+
 // Responsive Adjustments
 @media (max-width: 768px) {
-  .game-header {
-    h1 {
-      font-size: 1.8rem;
-    }
-    
-    .game-stats {
-      .stat-item {
-        font-size: 1rem;
-        margin: 0 8px;
-      }
-    }
-  }
-  
-  .game-start, .game-over {
-    padding: 24px 16px;
-    
-    h2 {
-      font-size: 1.7rem;
-    }
-    
-    p {
-      font-size: 1rem;
-    }
-  }
-  
-  .game-selection {
-    padding: 16px;
-    
-    h2 {
-      font-size: 1.7rem;
-    }
-    
-    .game-options {
-      .game-option {
-        padding: 16px;
-        
-        h3 {
-          font-size: 1.3rem;
-        }
-        
-        p {
-          font-size: 0.9rem;
-        }
-        
-        .game-preview {
-          height: 150px;
-        }
-      }
-    }
-  }
-  
-  .start-button, .restart-button, .select-button, .home-button {
-    padding: 10px 20px;
-    font-size: 14px;
+.game-header h1 {
+  font-size: 2rem;
+}
+
+.game-selection h2 {
+  font-size: 1.6rem;
+}
+
+.game-options {
+  flex-direction: column;
+  align-items: center;
+
+  .game-card {
+    width: 90%;
   }
 }
+
+.game-stats {
+  flex-direction: column;
+  gap: 20px;
+}
+}
+

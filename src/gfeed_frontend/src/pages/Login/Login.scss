@@ -6,7 +6,7 @@ $primary-dark: darken($primary-color, 15%);
 $primary-light: rgba($primary-color, 0.5);
 $dark-bg-color: #050514;
 $dark-accent: #0c0c25;
-$card-bg: rgba(11, 15, 40, 0.75);
+$card-bg: rgba(11, 13, 40, 0.75);
 $card-hover-bg: rgba(16, 20, 53, 0.85);
 $text-color: #e6e6ff;
 $highlight-color: #00f6ff;
@@ -32,10 +32,10 @@ $button-glow: 0 5px 15px rgba($primary-color, 0.4);
   text-shadow: 0 0 5px rgba($color, 0.3), 0 0 10px rgba($color, 0.2);
 }
 
+
 // Global Styles for the Login Page
 .login-page {
   position: relative;
-  width: 100vw;
   height: 100vh;
   background-color: $dark-bg-color;
   overflow: hidden;
@@ -45,6 +45,8 @@ $button-glow: 0 5px 15px rgba($primary-color, 0.4);
   align-items: center;
   font-family: 'Rajdhani', sans-serif;
   color: $text-color;
+  min-height: 100vh;
+  width: 100%;
   
   &::before {
     content: '';
@@ -100,8 +102,25 @@ $button-glow: 0 5px 15px rgba($primary-color, 0.4);
   100% { opacity: 0.2; }
 }
 
+/* Added proper grid-background styling */
+.grid-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.6;
+  animation: grid-fade 8s infinite alternate;
+}
+
+@keyframes grid-fade {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.7; }
+}
+
 .grid-overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -111,10 +130,18 @@ $button-glow: 0 5px 15px rgba($primary-color, 0.4);
     linear-gradient(to bottom, rgba($primary-color, 0.05) 1px, transparent 1px);
   background-size: 40px 40px;
   z-index: 1;
+  animation: grid-pulse 20s infinite linear;
+}
+
+/* Added grid-pulse animation for more dynamic effect */
+@keyframes grid-pulse {
+  0% { background-size: 40px 40px; }
+  50% { background-size: 45px 45px; }
+  100% { background-size: 40px 40px; }
 }
 
 .background-chart {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;

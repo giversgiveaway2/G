@@ -26,7 +26,7 @@ const Game = () => {
   return (
     <div className="game-container">
       <div className="game-header">
-        <h1>G-Platform Mini Games</h1>
+        <h1>G Games</h1>
         {gameActive && (
           <div className="game-stats">
             <div className="stat-item">Score: {score}</div>
@@ -108,6 +108,7 @@ const SpaceShooterGame = ({
   
   // Start the game
   const startGame = () => {
+    console.log("Starting game...");
     setScore(0);
     setTimeLeft(30);
     setGameActive(true);
@@ -115,6 +116,11 @@ const SpaceShooterGame = ({
     setEnemies([]);
     setLasers([]);
     setPlayerPosition({ x: 50, y: 85 });
+    
+    // Immediately spawn first enemy
+    setTimeout(() => {
+      spawnEnemy();
+    }, 500);
     
     // Set up game loop
     const loopId = setInterval(() => {
@@ -125,7 +131,7 @@ const SpaceShooterGame = ({
     // Set up enemy spawning
     const spawnId = setInterval(() => {
       spawnEnemy();
-    }, 1000);
+    }, 1500);
     setEnemySpawnId(spawnId);
   };
   
@@ -143,18 +149,13 @@ const SpaceShooterGame = ({
     
     // Move enemies
     setEnemies(prevEnemies => {
+      console.log("Current enemies:", prevEnemies.length); // Debug log
       return prevEnemies
         .map(enemy => ({
           ...enemy,
           y: enemy.y + enemy.speed // Move down
         }))
-        .filter(enemy => {
-          // Remove enemies that go off screen
-          if (enemy.y > 100) {
-            return false;
-          }
-          return true;
-        });
+        .filter(enemy => enemy.y <= 100); // Keep enemies that are on screen
     });
     
     // Check for collisions between lasers and enemies
@@ -168,13 +169,14 @@ const SpaceShooterGame = ({
     const newEnemy = {
       id: Date.now(),
       x: Math.random() * 90 + 5,
-      y: -10,
-      width: 40,
-      height: 40,
+      y: 0, // Start at the very top
+      width: 30, // Larger size to be more visible
+      height: 30, // Larger size to be more visible
       speed: Math.random() * 1 + 0.5,
       type
     };
     
+    console.log("Spawned enemy:", newEnemy); // Debug log
     setEnemies(prevEnemies => [...prevEnemies, newEnemy]);
   };
   
@@ -205,13 +207,18 @@ const SpaceShooterGame = ({
       for (let j = updatedEnemies.length - 1; j >= 0; j--) {
         const enemy = updatedEnemies[j];
         
+        // Simplified collision detection
+        const laserX = laser.x;
+        const laserY = laser.y;
+        const enemyX = enemy.x;
+        const enemyY = enemy.y;
+        
         // Check if laser and enemy overlap
-        if (
-          laser.x + 1.5 >= enemy.x - enemy.width/2 &&
-          laser.x - 1.5 <= enemy.x + enemy.width/2 &&
-          laser.y <= enemy.y + enemy.height/2 &&
-          laser.y >= enemy.y - enemy.height/2
-        ) {
+        const dx = Math.abs(laserX - enemyX);
+        const dy = Math.abs(laserY - enemyY);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 15) { // Collision radius
           // Collision detected
           updatedLasers.splice(i, 1);
           updatedEnemies.splice(j, 1);
@@ -248,6 +255,37 @@ const SpaceShooterGame = ({
       fireLaser();
     }
   };
+  
+  // Handle keyboard controls
+  const handleKeyDown = (e) => {
+    if (!gameActive) return;
+    
+    // Move player with arrow keys
+    if (e.key === 'ArrowLeft' || e.key === 'a') {
+      setPlayerPosition(prev => ({
+        ...prev,
+        x: Math.max(5, prev.x - 5)
+      }));
+    } else if (e.key === 'ArrowRight' || e.key === 'd') {
+      setPlayerPosition(prev => ({
+        ...prev,
+        x: Math.min(95, prev.x + 5)
+      }));
+    }
+    
+    // Fire with space bar
+    if (e.key === ' ' || e.key === 'Spacebar') {
+      fireLaser();
+    }
+  };
+  
+  // Set up keyboard event listeners
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [gameActive, playerPosition]);
   
   // Timer effect
   useEffect(() => {
@@ -288,6 +326,7 @@ const SpaceShooterGame = ({
           <h2>Space Shooter</h2>
           <p>Pilot your spaceship through waves of alien enemies!</p>
           <p>Move your mouse to control your ship, click to fire lasers!</p>
+          <p>You can also use arrow keys or A/D to move and spacebar to fire.</p>
           <button className="start-button" onClick={startGame}>Start Game</button>
           <button className="select-button" onClick={goToGameSelection}>Choose Different Game</button>
           <button className="home-button" onClick={goToHome}>Back to Home</button>
@@ -300,14 +339,27 @@ const SpaceShooterGame = ({
           ref={gameAreaRef}
           onMouseMove={handleMouseMove}
           onClick={handleClick}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '500px',
+            backgroundColor: '#0a0a2a',
+            overflow: 'hidden'
+          }}
         >
           {/* Player spaceship */}
           <div 
             className="player-ship"
             ref={playerRef}
             style={{
+              position: 'absolute',
               left: `${playerPosition.x}%`,
-              bottom: `${100 - playerPosition.y}%`
+              bottom: `${100 - playerPosition.y}%`,
+              width: '30px',
+              height: '30px',
+              backgroundColor: 'lightblue',
+              borderRadius: '5px',
+              transform: 'translateX(-50%)'
             }}
           ></div>
           
@@ -317,10 +369,16 @@ const SpaceShooterGame = ({
               key={enemy.id}
               className={`enemy enemy-${enemy.type}`}
               style={{
+                position: 'absolute',
                 left: `${enemy.x}%`,
                 top: `${enemy.y}%`,
                 width: `${enemy.width}px`,
-                height: `${enemy.height}px`
+                height: `${enemy.height}px`,
+                backgroundColor: enemy.type === 'pirate' ? 'red' : 
+                                enemy.type === 'ufo' ? 'green' : 
+                                'purple',
+                borderRadius: '50%',
+                zIndex: 5
               }}
             ></div>
           ))}
@@ -331,10 +389,13 @@ const SpaceShooterGame = ({
               key={laser.id}
               className="laser"
               style={{
+                position: 'absolute',
                 left: `${laser.x}%`,
                 top: `${laser.y}%`,
                 width: `${laser.width}px`,
-                height: `${laser.height}px`
+                height: `${laser.height}px`,
+                backgroundColor: 'red',
+                transform: 'translateX(-50%)'
               }}
             ></div>
           ))}

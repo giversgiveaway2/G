@@ -19,6 +19,7 @@
     "@dfinity/agent": "^2.4.1",
     "@dfinity/auth-client": "^2.4.1",
     "framer-motion": "^12.12.1",
+    "lucide-react": "^0.511.0",
     "react-countup": "^6.5.3"
   }
 }

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.scss';
@@ -35,6 +36,10 @@ const Login = ({ login }) => {
     navigate('/pages/MiniGame/Game');
   };
   
+  const goToLending = () => {
+    navigate('/pages/Lending/Lending');
+  };
+
   // Simulated market data for animation
   useEffect(() => {
     setTimeout(() => setIsLoaded(true), 500);
@@ -91,6 +96,9 @@ const Login = ({ login }) => {
     <div className="login-page">
       <div className="stars"></div>
       <div className="twinkling"></div>
+      <div className="grid-background">
+        <div className="grid-overlay"></div>
+      </div>
       <div className="floating-orbs">
         {[...Array(10)].map((_, i) => (
           <div key={i} className={`orb orb-${i}`}></div>
@@ -98,9 +106,7 @@ const Login = ({ login }) => {
       </div>
       
       <canvas ref={chartCanvasRef} className="background-chart"></canvas>
-
-      <div className="grid-overlay"></div>
-
+      
       <motion.div 
         className="login-content"
         initial="hidden"
@@ -140,7 +146,6 @@ const Login = ({ login }) => {
             </div>
           ))}
         </motion.div>
-
         <motion.div className="services-container" variants={containerVariants}>
           <motion.div 
             className={`service-card ${activeCard === 0 ? 'active' : ''}`}
@@ -171,6 +176,15 @@ const Login = ({ login }) => {
             </div>
             <h3>Lending & Borrowing</h3>
             <p>Deposit ICP or ckBTC and borrow stablecoins up to 85% of your locked value</p>
+            <motion.button 
+              onClick={goToLending} 
+              className="game-button"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Lending & Borrowing
+              <span className="button-glow"></span>
+            </motion.button>
             <div className="card-footer">
               <span className="highlight-text">6.2% APY</span>
             </div>
