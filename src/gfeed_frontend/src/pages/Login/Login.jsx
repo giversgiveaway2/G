@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.scss';
@@ -232,6 +231,69 @@ const Login = ({ login }) => {
           <span className="button-glow"></span>
         </motion.button>
       </motion.div>
+      
+      {/* Footer Section */}
+      <motion.footer 
+        className="login-footer"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5 }}
+      >
+        <div className="footer-content">
+          <div className="footer-section">
+            <h4>Platform</h4>
+            <ul>
+              <li><a href="#analytics">Analytics</a></li>
+              <li><a href="#lending">Lending</a></li>
+              <li><a href="#gaming">Gaming</a></li>
+              <li><a href="#api">API Access</a></li>
+            </ul>
+          </div>
+          <div className="footer-section">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="#docs">Documentation</a></li>
+              <li><a href="#whitepaper">Whitepaper</a></li>
+              <li><a href="#security">Security</a></li>
+              <li><a href="#roadmap">Roadmap</a></li>
+            </ul>
+          </div>
+          <div className="footer-section">
+            <h4>Community</h4>
+            <ul>
+              <li><a href="https://oc.app/community/4q2vw-6yaaa-aaaaf-bpexa-cai/channel/2649107017" target="_blank" rel="noopener noreferrer">OpenChat</a></li>
+              <li><a href="https://x.com/Givers_Giveaway" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+              <li><a href="https://t.me/+4U5uFqtIfWozMzRh" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+              <li><a href="https://github.com/giversgiveaway2/G" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+            </ul>
+          </div>
+          <div className="footer-section">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#terms">Terms of Service</a></li>
+              <li><a href="#privacy">Privacy Policy</a></li>
+              <li><a href="#cookies">Cookie Policy</a></li>
+              <li><a href="#disclaimer">Risk Disclaimer</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <div className="footer-logo">
+            <img src="/g1.ico" alt="G Logo" />
+            <span>G Platform</span>
+          </div>
+          <div className="footer-stats">
+            <span>Powered by Internet Computer</span>
+            <div className="status-indicator">
+              <div className="status-dot"></div>
+              <span>All Systems Operational</span>
+            </div>
+          </div>
+          <div className="footer-copyright">
+            <p>&copy; 2025 G Platform. Built on the Internet Computer blockchain.</p>
+          </div>
+        </div>
+      </motion.footer>
       
       <div className="blockchain-animation">
         {[...Array(8)].map((_, i) => (
